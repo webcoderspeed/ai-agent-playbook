@@ -1,0 +1,626 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AI System Prompt Configuration",
+  "description": "Standardized JSON schema for defining AI system prompts and behaviors",
+  "version": "1.0.0",
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "description": "Metadata about the system prompt",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the prompt",
+          "pattern": "^[a-z0-9-_]+$",
+          "examples": ["customer-support-agent", "technical-writer", "code-reviewer"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the prompt",
+          "examples": ["Customer Support Assistant", "Technical Documentation Writer", "Code Review Specialist"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the prompt's purpose and capabilities",
+          "maxLength": 1000
+        },
+        "version": {
+          "type": "string",
+          "description": "Semantic version of the prompt",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "examples": ["1.0.0", "2.1.3"]
+        },
+        "author": {
+          "type": "string",
+          "description": "Author or team responsible for the prompt"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp in ISO 8601 format"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp in ISO 8601 format"
+        },
+        "tags": {
+          "type": "array",
+          "description": "Tags for categorization and search",
+          "items": {
+            "type": "string",
+            "maxLength": 50
+          },
+          "examples": [["support", "customer-service", "faq"], ["technical", "documentation", "api"]]
+        }
+      },
+      "required": ["id", "name", "description", "version"],
+      "additionalProperties": false
+    },
+    "persona": {
+      "type": "object",
+      "description": "Persona and role definition for the AI",
+      "properties": {
+        "role": {
+          "type": "string",
+          "description": "Primary role of the AI",
+          "examples": ["customer support agent", "technical writer", "software engineer", "growth marketer"]
+        },
+        "expertiseLevel": {
+          "type": "string",
+          "enum": ["junior", "mid-level", "senior", "expert"],
+          "description": "Level of expertise in the domain"
+        },
+        "tone": {
+          "type": "string",
+          "enum": ["friendly", "professional", "formal", "casual", "enthusiastic", "empathetic"],
+          "description": "Communication tone and style"
+        },
+        "communicationStyle": {
+          "type": "object",
+          "description": "Detailed communication preferences",
+          "properties": {
+            "conciseness": {
+              "type": "string",
+              "enum": ["very-concise", "concise", "balanced", "detailed", "very-detailed"],
+              "default": "balanced"
+            },
+            "formality": {
+              "type": "string",
+              "enum": ["very-formal", "formal", "neutral", "casual", "very-casual"],
+              "default": "neutral"
+            },
+            "humorLevel": {
+              "type": "string",
+              "enum": ["none", "subtle", "moderate", "playful"],
+              "default": "none"
+            },
+            "empathyLevel": {
+              "type": "string",
+              "enum": ["low", "medium", "high", "very-high"],
+              "default": "medium"
+            }
+          },
+          "required": ["conciseness", "formality", "humorLevel", "empathyLevel"]
+        },
+        "knowledgeDomains": {
+          "type": "array",
+          "description": "Areas of knowledge and expertise",
+          "items": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "examples": [["software development", "web technologies", "API design"], ["customer support", "product knowledge", "troubleshooting"]]
+        }
+      },
+      "required": ["role", "expertiseLevel", "tone"],
+      "additionalProperties": false
+    },
+    "behavior": {
+      "type": "object",
+      "description": "Behavioral constraints and guidelines",
+      "properties": {
+        "responseFormat": {
+          "type": "object",
+          "description": "Formatting guidelines for responses",
+          "properties": {
+            "preferredFormat": {
+              "type": "string",
+              "enum": ["markdown", "plaintext", "html", "json"],
+              "default": "markdown"
+            },
+            "maxLength": {
+              "type": "integer",
+              "description": "Maximum response length in characters",
+              "minimum": 100,
+              "maximum": 10000,
+              "default": 2000
+            },
+            "useHeadings": {
+              "type": "boolean",
+              "description": "Whether to use headings and sections",
+              "default": true
+            },
+            "useBulletPoints": {
+              "type": "boolean",
+              "description": "Whether to use bullet points for lists",
+              "default": true
+            },
+            "codeBlockStyle": {
+              "type": "string",
+              "enum": ["indented", "fenced", "both"],
+              "default": "fenced"
+            }
+          },
+          "required": ["preferredFormat", "maxLength"]
+        },
+        "contentPolicies": {
+          "type": "object",
+          "description": "Content safety and policy guidelines",
+          "properties": {
+            "avoidTopics": {
+              "type": "array",
+              "description": "Topics to avoid or handle with care",
+              "items": {
+                "type": "string"
+              },
+              "examples": [["financial advice", "medical advice", "legal advice", "political opinions"]]
+            },
+            "safetyLevel": {
+              "type": "string",
+              "enum": ["strict", "moderate", "lenient"],
+              "description": "How strictly to follow content safety guidelines",
+              "default": "moderate"
+            },
+            "disclaimerRequired": {
+              "type": "boolean",
+              "description": "Whether to include disclaimers for certain topics",
+              "default": true
+            },
+            "factChecking": {
+              "type": "string",
+              "enum": ["strict", "moderate", "minimal"],
+              "description": "How rigorously to fact-check information",
+              "default": "moderate"
+            }
+          },
+          "required": ["avoidTopics", "safetyLevel"]
+        },
+        "interactionStyle": {
+          "type": "object",
+          "description": "How the AI should interact with users",
+          "properties": {
+            "proactiveness": {
+              "type": "string",
+              "enum": ["reactive", "balanced", "proactive"],
+              "description": "How proactive to be in conversations",
+              "default": "balanced"
+            },
+            "questionAsking": {
+              "type": "string",
+              "enum": ["minimal", "clarifying", "exploratory"],
+              "description": "How often to ask questions",
+              "default": "clarifying"
+            },
+            "confidenceLevel": {
+              "type": "string",
+              "enum": ["cautious", "balanced", "confident"],
+              "description": "How confident to appear in responses",
+              "default": "balanced"
+            },
+            "admitUncertainty": {
+              "type": "boolean",
+              "description": "Whether to admit when uncertain",
+              "default": true
+            },
+            "suggestAlternatives": {
+              "type": "boolean",
+              "description": "Whether to suggest alternative approaches",
+              "default": true
+            }
+          },
+          "required": ["proactiveness", "questionAsking", "confidenceLevel"]
+        }
+      },
+      "required": ["responseFormat", "contentPolicies", "interactionStyle"],
+      "additionalProperties": false
+    },
+    "capabilities": {
+      "type": "object",
+      "description": "Capabilities and limitations of the AI",
+      "properties": {
+        "supportedTasks": {
+          "type": "array",
+          "description": "Types of tasks the AI can perform",
+          "items": {
+            "type": "string",
+            "enum": ["answering_questions", "problem_solving", "content_generation", "code_writing", "data_analysis", "translation", "summarization", "explanation", "creative_writing", "technical_documentation"]
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "description": "Explicit limitations and boundaries",
+          "items": {
+            "type": "string"
+          },
+          "examples": [["Cannot provide real-time information", "Limited knowledge after 2023", "Cannot execute code", "No access to personal data"]]
+        },
+        "strengths": {
+          "type": "array",
+          "description": "Areas where the AI excels",
+          "items": {
+            "type": "string"
+          },
+          "examples": [["Technical explanations", "Code examples", "Structured information", "Step-by-step guides"]]
+        },
+        "contextWindow": {
+          "type": "object",
+          "description": "Context and memory limitations",
+          "properties": {
+            "maxTokens": {
+              "type": "integer",
+              "description": "Maximum context length in tokens",
+              "minimum": 1000,
+              "maximum": 128000,
+              "default": 4000
+            },
+            "memoryType": {
+              "type": "string",
+              "enum": ["stateless", "short_term", "long_term"],
+              "description": "Type of memory retention",
+              "default": "stateless"
+            },
+            "retentionPeriod": {
+              "type": "string",
+              "description": "How long to retain context",
+              "enum": ["immediate", "conversation", "session", "extended"],
+              "default": "conversation"
+            }
+          },
+          "required": ["maxTokens", "memoryType"]
+        }
+      },
+      "required": ["supportedTasks", "limitations", "strengths"],
+      "additionalProperties": false
+    },
+    "promptEngineering": {
+      "type": "object",
+      "description": "Prompt engineering techniques and structure",
+      "properties": {
+        "systemPrompt": {
+          "type": "string",
+          "description": "The core system prompt text",
+          "maxLength": 10000
+        },
+        "promptStructure": {
+          "type": "object",
+          "description": "How to structure the prompt",
+          "properties": {
+            "usePersonaFirst": {
+              "type": "boolean",
+              "description": "Whether to start with persona definition",
+              "default": true
+            },
+            "includeExamples": {
+              "type": "boolean",
+              "description": "Whether to include few-shot examples",
+              "default": true
+            },
+            "exampleCount": {
+              "type": "integer",
+              "description": "Number of examples to include",
+              "minimum": 0,
+              "maximum": 10,
+              "default": 3
+            },
+            "useStepByStep": {
+              "type": "boolean",
+              "description": "Whether to encourage step-by-step thinking",
+              "default": true
+            },
+            "reasoningFormat": {
+              "type": "string",
+              "enum": ["hidden", "brief", "detailed"],
+              "description": "How much reasoning to show",
+              "default": "brief"
+            }
+          },
+          "required": ["usePersonaFirst", "includeExamples", "useStepByStep"]
+        },
+        "optimizationTechniques": {
+          "type": "array",
+          "description": "Prompt optimization techniques to apply",
+          "items": {
+            "type": "string",
+            "enum": ["chain_of_thought", "self_correction", "multi_step_reasoning", "analogies", "contrastive_examples", "role_playing"]
+          },
+          "default": ["chain_of_thought", "self_correction"]
+        },
+        "temperature": {
+          "type": "number",
+          "description": "Creativity temperature setting",
+          "minimum": 0,
+          "maximum": 2,
+          "default": 0.7
+        },
+        "maxTokens": {
+          "type": "integer",
+          "description": "Maximum tokens to generate",
+          "minimum": 100,
+          "maximum": 4000,
+          "default": 2000
+        }
+      },
+      "required": ["systemPrompt", "promptStructure", "temperature", "maxTokens"],
+      "additionalProperties": false
+    },
+    "examples": {
+      "type": "array",
+      "description": "Few-shot learning examples",
+      "items": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "type": "string",
+            "description": "Example input or question",
+            "maxLength": 1000
+          },
+          "output": {
+            "type": "string",
+            "description": "Example output or response",
+            "maxLength": 2000
+          },
+          "reasoning": {
+            "type": "string",
+            "description": "Optional reasoning behind the response",
+            "maxLength": 1000
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags for this example",
+            "items": {
+              "type": "string",
+              "maxLength": 50
+            }
+          }
+        },
+        "required": ["input", "output"],
+        "additionalProperties": false
+      },
+      "maxItems": 10
+    },
+    "integration": {
+      "type": "object",
+      "description": "Integration and deployment settings",
+      "properties": {
+        "targetPlatforms": {
+          "type": "array",
+          "description": "Platforms where this prompt will be used",
+          "items": {
+            "type": "string",
+            "enum": ["openai", "anthropic", "gemini", "custom", "huggingface", "azure", "aws"]
+          }
+        },
+        "apiVersion": {
+          "type": "string",
+          "description": "API version compatibility",
+          "examples": ["2023-12-01", "2024-02-15", "v1"]
+        },
+        "requiredFeatures": {
+          "type": "array",
+          "description": "Required platform features",
+          "items": {
+            "type": "string",
+            "enum": ["function_calling", "json_mode", "vision", "audio", "streaming"]
+          }
+        },
+        "environment": {
+          "type": "string",
+          "enum": ["development", "staging", "production"],
+          "description": "Deployment environment",
+          "default": "production"
+        },
+        "rateLimiting": {
+          "type": "object",
+          "description": "Rate limiting configuration",
+          "properties": {
+            "requestsPerMinute": {
+              "type": "integer",
+              "description": "Maximum requests per minute",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 60
+            },
+            "burstCapacity": {
+              "type": "integer",
+              "description": "Burst capacity for sudden traffic",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 120
+            }
+          },
+          "required": ["requestsPerMinute"]
+        }
+      },
+      "required": ["targetPlatforms", "environment"],
+      "additionalProperties": false
+    },
+    "monitoring": {
+      "type": "object",
+      "description": "Monitoring and analytics configuration",
+      "properties": {
+        "metrics": {
+          "type": "array",
+          "description": "Metrics to track",
+          "items": {
+            "type": "string",
+            "enum": ["response_time", "error_rate", "usage_count", "user_satisfaction", "cost_per_request"]
+          },
+          "default": ["response_time", "error_rate", "usage_count"]
+        },
+        "logging": {
+          "type": "object",
+          "description": "Logging configuration",
+          "properties": {
+            "level": {
+              "type": "string",
+              "enum": ["debug", "info", "warn", "error"],
+              "default": "info"
+            },
+            "format": {
+              "type": "string",
+              "enum": ["json", "text"],
+              "default": "json"
+            },
+            "retainInputOutput": {
+              "type": "boolean",
+              "description": "Whether to log input/output data",
+              "default": false
+            }
+          },
+          "required": ["level", "format"]
+        },
+        "alerts": {
+          "type": "array",
+          "description": "Alert conditions",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["error_rate", "latency", "usage_spike", "cost_exceeded"]
+              },
+              "threshold": {
+                "type": "number",
+                "description": "Threshold value for alert"
+              },
+              "duration": {
+                "type": "string",
+                "description": "Time window for alert condition",
+                "examples": ["5m", "1h", "24h"]
+              },
+              "channels": {
+                "type": "array",
+                "description": "Alert notification channels",
+                "items": {
+                  "type": "string",
+                  "enum": ["email", "slack", "sms", "webhook"]
+                }
+              }
+            },
+            "required": ["type", "threshold", "duration"]
+          }
+        }
+      },
+      "required": ["metrics", "logging"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["metadata", "persona", "behavior", "capabilities", "promptEngineering"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "metadata": {
+        "id": "customer-support-agent",
+        "name": "Customer Support Assistant",
+        "description": "AI assistant for handling customer inquiries and support tickets with empathy and professionalism",
+        "version": "1.0.0",
+        "author": "Support Engineering Team",
+        "createdAt": "2024-01-15T10:00:00Z",
+        "updatedAt": "2024-01-20T14:30:00Z",
+        "tags": ["support", "customer-service", "faq"]
+      },
+      "persona": {
+        "role": "customer support agent",
+        "expertiseLevel": "senior",
+        "tone": "empathetic",
+        "communicationStyle": {
+          "conciseness": "balanced",
+          "formality": "neutral",
+          "humorLevel": "none",
+          "empathyLevel": "high"
+        },
+        "knowledgeDomains": ["product knowledge", "troubleshooting", "billing inquiries", "account management"]
+      },
+      "behavior": {
+        "responseFormat": {
+          "preferredFormat": "markdown",
+          "maxLength": 1500,
+          "useHeadings": true,
+          "useBulletPoints": true,
+          "codeBlockStyle": "fenced"
+        },
+        "contentPolicies": {
+          "avoidTopics": ["financial advice", "medical advice", "legal advice"],
+          "safetyLevel": "strict",
+          "disclaimerRequired": true,
+          "factChecking": "moderate"
+        },
+        "interactionStyle": {
+          "proactiveness": "balanced",
+          "questionAsking": "clarifying",
+          "confidenceLevel": "confident",
+          "admitUncertainty": true,
+          "suggestAlternatives": true
+        }
+      },
+      "capabilities": {
+        "supportedTasks": ["answering_questions", "problem_solving", "explanation", "step-by-step guides"],
+        "limitations": ["Cannot access user account data", "Limited to product knowledge up to 2023", "Cannot process refunds directly"],
+        "strengths": ["Clear explanations", "Patient troubleshooting", "Professional communication"],
+        "contextWindow": {
+          "maxTokens": 8000,
+          "memoryType": "stateless",
+          "retentionPeriod": "conversation"
+        }
+      },
+      "promptEngineering": {
+        "systemPrompt": "You are a helpful and empathetic customer support agent for Example Company. Your role is to assist customers with their inquiries, troubleshoot issues, and provide clear, professional guidance. Always be patient, understanding, and focused on solving the customer's problem.\n\nKey guidelines:\n- Start by understanding the customer's issue fully\n- Provide step-by-step guidance when appropriate\n- Admit when you don't know something and offer to escalate\n- Maintain a positive and helpful tone\n- Use clear, simple language avoiding jargon\n- Format responses with headings and bullet points for readability",
+        "promptStructure": {
+          "usePersonaFirst": true,
+          "includeExamples": true,
+          "exampleCount": 3,
+          "useStepByStep": true,
+          "reasoningFormat": "brief"
+        },
+        "optimizationTechniques": ["chain_of_thought", "self_correction"],
+        "temperature": 0.7,
+        "maxTokens": 1200
+      },
+      "examples": [
+        {
+          "input": "My login isn't working. I keep getting an error message.",
+          "output": "I'm sorry to hear you're having trouble logging in. Let's troubleshoot this step by step:\n\n1. **Check your credentials**: Ensure you're using the correct email and password. If you've forgotten your password, you can reset it [here](https://example.com/reset-password).\n\n2. **Clear browser cache**: Sometimes cached data can cause login issues. Try clearing your browser cache and cookies, then attempt to login again.\n\n3. **Try incognito mode**: Open an incognito/private browsing window and try logging in there. This helps determine if it's a browser-specific issue.\n\n4. **Check service status**: Our [status page](https://status.example.com) shows if there are any ongoing outages affecting login.\n\nIf none of these steps work, please provide the exact error message you're seeing, and I'll help you further.",
+          "tags": ["troubleshooting", "login", "error"]
+        }
+      ],
+      "integration": {
+        "targetPlatforms": ["openai", "anthropic"],
+        "apiVersion": "2023-12-01",
+        "requiredFeatures": ["function_calling"],
+        "environment": "production",
+        "rateLimiting": {
+          "requestsPerMinute": 60,
+          "burstCapacity": 120
+        }
+      },
+      "monitoring": {
+        "metrics": ["response_time", "error_rate", "user_satisfaction"],
+        "logging": {
+          "level": "info",
+          "format": "json",
+          "retainInputOutput": false
+        },
+        "alerts": [
+          {
+            "type": "error_rate",
+            "threshold": 5,
+            "duration": "5m",
+            "channels": ["slack", "email"]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,414 @@
+# YAML Agent Specification
+# Master Prompt Framework Implementation
+# Version: 1.0.0
+# Description: Enterprise-grade AI agent configuration specification using YAML
+# Follows THINK/PLAN/RESEARCH/EXECUTE structure from master prompt
+
+---
+# ========================
+# THINK: Problem Understanding
+# ========================
+# Problem: Fragmented agent configurations across teams and platforms
+# Solution: Standardized YAML specification for consistent AI agent deployment
+# Success Metrics: Interoperability, maintainability, scalability, security
+
+# ========================
+# PLAN: Execution Structure
+# ========================
+# Phase 1: Core Agent Definition
+# Phase 2: Capability Management  
+# Phase 3: Integration & Deployment
+# Phase 4: Monitoring & Governance
+
+# ========================
+# RESEARCH: Best Practices
+# ========================
+# - YAML 1.2 specification compliance
+# - Multi-platform compatibility (OpenAI, Anthropic, Azure, AWS, Google)
+# - Security-by-design principles
+# - Environment variable support for secrets
+# - Validation schema included
+# - Documentation generation support
+
+# ========================
+# EXECUTE: Agent Specification
+# ========================
+
+# Agent Metadata
+metadata:
+  # Versioning and identification
+  version: "1.0.0"
+  name: "customer-support-agent"
+  description: "AI-powered customer support agent for e-commerce platform"
+  author: "AI Engineering Team"
+  created: "2024-01-15"
+  last_modified: "2024-01-15"
+  
+  # Classification and tagging
+  tags:
+    - "customer-support"
+    - "e-commerce"
+    - "multi-lingual"
+    - "tier-1-support"
+  
+  # Compliance and governance
+  compliance:
+    - "GDPR"
+    - "CCPA"
+    - "HIPAA"  # If handling healthcare data
+    - "PCI-DSS"  # If handling payment data
+  
+  # Ownership and support
+  owner: "customer-support@company.com"
+  escalation_path: "ai-ops@company.com"
+  sla: "99.9%"
+
+# AI Provider Configuration
+provider:
+  # Primary AI provider
+  type: "openai"  # openai, anthropic, azure, aws, google, huggingface
+  
+  # Model configuration
+  model: "gpt-4-turbo-preview"
+  api_version: "2024-01-01"
+  
+  # API configuration (environment variables for security)
+  api_key: "env:OPENAI_API_KEY"
+  base_url: "https://api.openai.com/v1"
+  
+  # Performance tuning
+  temperature: 0.7
+  max_tokens: 4000
+  top_p: 0.9
+  frequency_penalty: 0.1
+  presence_penalty: 0.1
+  
+  # Fallback configuration
+  fallback:
+    enabled: true
+    provider: "anthropic"
+    model: "claude-3-opus-20240229"
+    api_key: "env:ANTHROPIC_API_KEY"
+    conditions:
+      - "rate_limit_exceeded"
+      - "timeout"
+      - "model_not_available"
+
+# Agent Capabilities
+capabilities:
+  # Core competencies
+  core_skills:
+    - "customer_query_resolution"
+    - "order_status_checking"
+    - "return_processing"
+    - "product_information"
+    - "troubleshooting"
+  
+  # Language support
+  languages:
+    default: "en"
+    supported:
+      - code: "en"
+        name: "English"
+        proficiency: "native"
+      - code: "es"
+        name: "Spanish"
+        proficiency: "fluent"
+      - code: "fr"
+        name: "French"
+        proficiency: "fluent"
+      - code: "de"
+        name: "German"
+        proficiency: "intermediate"
+  
+  # Knowledge domains
+  knowledge_domains:
+    - "e-commerce"
+    - "customer_service"
+    - "product_catalog"
+    - "shipping_logistics"
+    - "payment_processing"
+    - "return_policies"
+  
+  # Limitations and boundaries
+  limitations:
+    - "cannot_process_refunds"
+    - "cannot_override_system_rules"
+    - "cannot_access_pii_directly"
+    - "escalates_complex_issues"
+    - "follows_company_policies"
+
+# Memory and Context Management
+memory:
+  # Conversation memory
+  short_term:
+    enabled: true
+    max_tokens: 8000
+    strategy: "sliding_window"
+    
+  # Long-term memory (vector database)
+  long_term:
+    enabled: true
+    type: "pinecone"  # pinecone, weaviate, chroma, redis
+    index_name: "customer-support-context"
+    api_key: "env:PINECONE_API_KEY"
+    environment: "us-west-2"
+    
+  # Context management
+  context_window: 16000
+  summary_strategy: "auto"
+  summary_threshold: 75  # percentage of context window used
+
+# Tool System Configuration
+tools:
+  # External API tools
+  - name: "order_lookup"
+    description: "Look up customer order information"
+    type: "api"
+    endpoint: "https://api.company.com/orders/v1/lookup"
+    auth:
+      type: "bearer"
+      token: "env:ORDER_API_TOKEN"
+    parameters:
+      - name: "order_id"
+        type: "string"
+        required: true
+      - name: "customer_email"
+        type: "string"
+        required: false
+    
+  # Database query tool
+  - name: "product_database"
+    description: "Query product information database"
+    type: "database"
+    connection_string: "env:PRODUCT_DB_CONNECTION"
+    query_timeout: 30
+    
+  # External service integration
+  - name: "shipping_tracker"
+    description: "Get shipping status from carrier API"
+    type: "api"
+    endpoint: "https://api.shipping.com/track"
+    auth:
+      type: "api_key"
+      key: "env:SHIPPING_API_KEY"
+    
+  # Internal utility tool
+  - name: "escalation_tool"
+    description: "Escalate issue to human agent"
+    type: "internal"
+    endpoint: "internal://escalation"
+    conditions:
+      - "customer_frustration_detected"
+      - "complex_technical_issue"
+      - "refund_requested"
+
+# Security and Compliance
+security:
+  # Data handling policies
+  data_retention:
+    conversation_logs: 30  # days
+    personal_data: 7      # days
+    analytics_data: 365   # days
+  
+  # Access control
+  access_control:
+    - role: "agent"
+      permissions:
+        - "read_customer_data"
+        - "write_conversation_logs"
+        - "call_tools"
+    - role: "admin"
+      permissions:
+        - "read_all_data"
+        - "modify_agent_behavior"
+        - "access_debug_information"
+  
+  # Content moderation
+  content_moderation:
+    enabled: true
+    provider: "openai"
+    categories:
+      hate: true
+      harassment: true
+      self_harm: true
+      sexual: true
+      violence: true
+    
+  # Privacy settings
+  privacy:
+    anonymize_pii: true
+    mask_sensitive_data: true
+    export_controls: true
+
+  # Confirmation Gates Configuration
+  confirmation_gates:
+    # High-risk action triggers requiring confirmation
+    required_for:
+      - "database_modification"
+      - "file_deletion"
+      - "financial_transactions"
+      - "user_data_processing"
+      - "production_deployment"
+      - "irreversible_changes"
+      - "external_api_calls"
+      - "system_configuration"
+      - "security_changes"
+    
+    # Confirmation protocols by risk level
+    protocols:
+      low_risk:
+        confirmation_type: "simple"
+        timeout: null
+        escalation: null
+        
+      medium_risk:
+        confirmation_type: "detailed"
+        timeout: "5m"
+        escalation: "team_lead"
+        
+      high_risk:
+        confirmation_type: "multi_factor"
+        timeout: "15m"
+        escalation: "department_head"
+        
+      critical_risk:
+        confirmation_type: "executive"
+        timeout: "1h"
+        escalation: "c_level"
+    
+    # Audit logging
+    audit_logging:
+      enabled: true
+      retention: "90d"
+      include_decisions: true
+      include_reasons: true
+      include_alternatives: true
+
+# Monitoring and Analytics
+monitoring:
+  # Performance metrics
+  metrics:
+    - name: "response_time"
+      threshold: 5000  # ms
+      alert: true
+    - name: "success_rate"
+      threshold: 95    # %
+      alert: true
+    - name: "customer_satisfaction"
+      threshold: 4.0   # out of 5
+      alert: true
+  
+  # Logging configuration
+  logging:
+    level: "info"
+    format: "json"
+    destination: "loki"  # loki, elasticsearch, cloudwatch
+    retention: 30
+  
+  # Alerting rules
+  alerts:
+    - name: "high_error_rate"
+      condition: "error_rate > 10%"
+      severity: "critical"
+      channels:
+        - "slack"
+        - "pagerduty"
+        - "email"
+    - name: "slow_response"
+      condition: "response_time > 10000"
+      severity: "warning"
+      channels:
+        - "slack"
+
+# Deployment Configuration
+deployment:
+  # Environment settings
+  environment: "production"
+  region: "us-west-2"
+  
+  # Scaling configuration
+  scaling:
+    min_instances: 2
+    max_instances: 10
+    scale_up_threshold: 70  # CPU %
+    scale_down_threshold: 30  # CPU %
+  
+  # Health checks
+  health_check:
+    enabled: true
+    interval: 30
+    timeout: 10
+    healthy_threshold: 2
+    unhealthy_threshold: 3
+  
+  # Update strategy
+  update_strategy: "rolling"
+  max_unavailable: 1
+  max_surge: 1
+
+# Prompt Engineering
+prompt_engineering:
+  # System prompt
+  system_prompt: |
+    You are a helpful customer support agent for an e-commerce company.
+    Your role is to assist customers with order inquiries, product information,
+    returns, and general support questions.
+    
+    Key guidelines:
+    - Be empathetic and patient with customers
+    - Provide accurate information from available tools
+    - Escalate complex issues to human agents when necessary
+    - Follow company policies and procedures
+    - Maintain professional and friendly tone
+    - Respect customer privacy and data security
+  
+  # Few-shot examples
+  examples:
+    - input: "Where is my order?"
+      output: "I'd be happy to help you track your order. Could you provide your order number or the email address used for the purchase?"
+    - input: "I want to return a product"
+      output: "I can help you with the return process. Please provide your order number and which item you'd like to return, and I'll guide you through the steps."
+    - input: "This product is damaged"
+      output: "I'm sorry to hear that. Let me help you with a replacement or refund. Please provide your order number and details about the issue."
+  
+  # Response formatting
+  response_format:
+    style: "professional_friendly"
+    max_length: 500
+    include_emojis: true
+    use_markdown: true
+
+# Validation Schema (YAML Schema)
+# $schema: "http://json-schema.org/draft-07/schema#"
+# This section would typically be in a separate schema file
+# but included here for completeness
+
+# Usage Example:
+# agent = load_agent_config("yaml-agent-spec.yaml")
+# validator = YAMLValidator(schema=agent_schema)
+# if validator.validate(agent):
+#     deploy_agent(agent)
+
+# Best Practices:
+# 1. Use environment variables for secrets (env:VARIABLE_NAME)
+# 2. Version control all agent configurations
+# 3. Validate YAML against schema before deployment
+# 4. Monitor agent performance and update configuration as needed
+# 5. Regular security audits of agent configurations
+
+# Supported Platforms:
+# - OpenAI GPT models
+# - Anthropic Claude models  
+# - Azure OpenAI Service
+# - AWS Bedrock
+# - Google Vertex AI
+# - HuggingFace Endpoints
+# - Custom model deployments
+
+# ========================
+# EXECUTION COMPLETE
+# ========================
+# This YAML specification provides a comprehensive, production-ready
+# agent configuration that follows master prompt principles and
+# enables consistent deployment across multiple AI platforms.
